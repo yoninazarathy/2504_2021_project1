@@ -12,6 +12,9 @@ end
 
 Base.show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")
 
+
+
+
 #TODO:
 #     def __str__(self) -> str:
 #         (coeff, deg) = self.coeff, self.degree
@@ -41,7 +44,7 @@ function +(t1::Term,t2::Term)::Term
     Term(t1.coeff + t2.coeff, t1.degree)
 end
 
--(t::Term) = Term(-t.coeff,t.degree) 
+-(t::Term) = Term(-t.coeff,t.degree)  #QQQQ - check with Andy why can't have ::Term as return value
 -(t1::Term,t2::Term)::Term = t1 + (-t2) 
 
 *(t1::Term,t2::Term)::Term = Term(t1.coeff * t2.coeff, t1.degree + t2.degree)

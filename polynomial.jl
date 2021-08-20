@@ -1,19 +1,58 @@
 struct Polynomial
     #QQQQ MutableBinaryMaxHeap or BinaryMaxHeap
-    terms::MutableBinaryMaxHeap{Term}
+    terms::MutableBinaryMaxHeap{Term}   #Will never have terms with 0 coefficient
     Polynomial() = new(MutableBinaryMaxHeap{Term}())
+    Polynomial(h::MutableBinaryMaxHeap{Term}) = new(h) #QQQQ - check not to have 0 coefficient
 end
 
-"""
-Convenience constructor 
-"""
-function Polynomial(terms_tuples::Vector{Tuple{Int,Int}})
-    p = Polynomial()
-    for tt in terms_tuples
-        push!(p,Term(tt...))
-    end
-    return p
+function Polynomial(t::Term)
+    terms = MutableBinaryMaxHeap{Term}()
+    t.coeff != 0 && push!(terms,t)
+    return Polynomial(terms)
 end
+
+function Polynomial(tv::Vector{Term})
+    terms = MutableBinaryMaxHeap{Term}()
+    for t in tv
+        t.coeff != 0 && push!(terms,t)
+    end
+    return Polynomial(terms)
+end
+
+#QQQQ - Yoni clean up to use above constuctors
+# """
+# Convenience constructor 
+# """
+# function Polynomial(terms_tuples::Vector{Tuple{Int,Int}})
+#     p = Polynomial()
+#     for tt in terms_tuples
+#         push!(p,Term(tt...))
+#     end
+#     return p
+# end
+
+#QQQQ - ideally do rand
+# function rand(u::Type{T})::Polynomial where T<:Polynomial
+#     @show hello
+# end
+
+
+#QQQQ - Yoni fiddle
+
+function rand(::Type{Polynomial} ; degree::Int = -1, terms::Int = -1, max_coeff::Int = 100)
+    if degree == -1
+        degree = rand(Poisson(5))
+    end
+
+    if terms == -1
+        terms = rand(Binomial(degree+1,0.5))
+    end
+
+    degrees = sample(1:degree,terms,replace = false)
+    coeffs = rand(1:max_coeff,terms)
+    return Polynomial( [Term(coeffs[i],degrees[i]) for i in 1:length(degrees)] )
+end
+
 
 #QQQQ Handle error if pushing another term of same degree
 function push!(p::Polynomial, t::Term) 
@@ -24,8 +63,8 @@ pop!(p::Polynomial) = pop!(p.terms)
 
 
 #QQQQ - Maybe re-think when doing mod-p
-leading(p::Polynomial)::Term = first(p.terms)
-degree(p::Polynomial)::Int = leading(p).degree
+leading(p::Polynomial)::Term = isempty(p.terms) ? Term(0,0) : first(p.terms)  #QQQQ should maybe use a "zero method" instead of Term(0,0)
+degree(p::Polynomial)::Int = leading(p).degree 
 iszero(p::Polynomial) = isempty(p.terms)
 
 #QQQQ - Improve pretty printing
@@ -40,7 +79,9 @@ function Base.show(io::IO, p::Polynomial)
     end
 end
 
-#QQQQ Yoni implement neg(-) and then we'll have subtration..
+==(p1::Polynomial, p2::Polynomial)::Bool = p1.terms == p2.terms
+
+#QQQQ - Maybe have the "distributive addition" paradigm like multiplication (less efficient)
 
 function +(p1::Polynomial, p2::Polynomial)::Polynomial
     p1, p2 = deepcopy(p1), deepcopy(p2)
@@ -74,10 +115,11 @@ function -(p::Polynomial)::Polynomial
     return p_out
 end
 
-#QQQQ - improve !exctract_all
-
-*(t::Term,p1::Polynomial)::Polynomial = Polynomial(map((tr)->t*tr,p1.terms))
+*(t::Term,p1::Polynomial)::Polynomial = iszero(t) ? Polynomial() : Polynomial(map((pt)->t*pt, p1.terms))
 *(p1::Polynomial, t::Term)::Polynomial = t*p1
+
+-(p::Polynomial) = Polynomial(map((pt)->-pt, p.terms)) #Can't specify return Polynomial?
+-(p1::Polynomial, p2::Polynomial)::Polynomial = p1 + (-p2)
 
 function *(p1::Polynomial, p2::Polynomial)::Polynomial
     p_out = Polynomial()
@@ -87,6 +129,7 @@ function *(p1::Polynomial, p2::Polynomial)::Polynomial
     return p_out
 end
 
+#QQQQ - Yoni - use map as needed and also maintain not having Term(0,0) as invairant
 function %(f::Polynomial, p::Int)::Polynomial
     p_out = Polynomial()
     for tt in extract_all!(deepcopy(f.terms))
@@ -105,15 +148,16 @@ f = q*g + r
 
 p is a prime
 """
-function divideby(num::Polynomial, den::Polynomial, p::Int)::Tuple{Polynomial,Polynomial}
-    f, g, q = num % p, den % p, Polynomial()
+function divide(num::Polynomial, den::Polynomial, p::Int)::Tuple{Polynomial,Polynomial}
+    f, g = num % p, den % p
+    q = Polynomial()
     while degree(f) ≥ degree(g)
-        h = (leading(num) ÷ leading(den))(p) #syzergy
+        h = Polynomial( (leading(f) ÷ leading(g))(p) )  #syzergy #QQQQ - Andy/Paul-B - can we do automatic promoting (see line below)
         f = (f - h*g) % p
-        q = (q + h) % p
+        q = (q + h) % p #QQQQ - would have auto promoted here
     end
-    @assert f % p == (q*g+r)%p #QQQQ see Polynomials can equate.
-    return q, f % p
+    @assert iszero( (num  - (q*g + f)) %p)
+    return q, f
 end
 
 
@@ -129,26 +173,3 @@ end
 
 #         return q, r
 
-#############################################
-#############################################
-#############################################
-# Testing zone...
-#############################################
-#############################################
-
-# p1 = Polynomial([(2,5),(4,7),(9,17),(2,4),(-3,18),(-6,8)])
-# p1 % 3
-# @show p1 * Term(2,3)
-p2 = Polynomial([(2,2),(-4,7)])
-@show p2
-@show evaluate(p2,2)
-# @show p1
-# @show p2
-# p3 = p1 + p2
-# @show p3
-# @show p3
-# @show iszero(p)
-# @show iszero(Polynomial())
-# p = Polynomial()
-# push!(p,Term(2,3))
-# push!(p,Term(2,5))
