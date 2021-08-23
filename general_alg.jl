@@ -10,18 +10,23 @@ function quo(a::T,b::T) where T <: Int
     return 1 + quo(a-b, b)
 end
 
-function euclid_alg(a,b)
-    (b == 0) && return a
-    return euclid_alg(b, a % b)
+function euclid_alg(a, b, rem_function)
+    @show (a,b)
+    b == 0 && return a
+    return euclid_alg(b, rem_function(a,b), rem_function)
 end
 
 
-function ext_euclid_alg(a,b)
+function ext_euclid_alg(a,b,rem_function = %, div_function = ÷)
     a == 0 && return b, 0, 1
-    g, s, t = ext_euclid_alg(b % a, a)
-    return g, t - (b ÷ a)*s, s
+    g, s, t = ext_euclid_alg(rem_function(b,a), a)
+    return g, t - div_function(b,a)*s, s
 end
 
 pretty_print_egcd((a,b),(g,s,t)) = println("$a × $s + $b × $t = $g") #\times + [TAB]
 
 inverse_mod(a,m) = mod(ext_euclid_alg(a,m)[2],m);
+
+
+
+

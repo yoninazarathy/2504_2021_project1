@@ -81,6 +81,10 @@ end
 
 ==(p1::Polynomial, p2::Polynomial)::Bool = p1.terms == p2.terms
 
+
+#QQQQ - is this sensible (Paul/Andy)
+==(p::Polynomial, n::T) where T <: Real = iszero(p) == iszero(n)
+
 #QQQQ - Maybe have the "distributive addition" paradigm like multiplication (less efficient)
 
 function +(p1::Polynomial, p2::Polynomial)::Polynomial
@@ -148,17 +152,27 @@ f = q*g + r
 
 p is a prime
 """
-function divide(num::Polynomial, den::Polynomial, p::Int)::Tuple{Polynomial,Polynomial}
-    f, g = num % p, den % p
-    q = Polynomial()
-    while degree(f) ≥ degree(g)
-        h = Polynomial( (leading(f) ÷ leading(g))(p) )  #syzergy #QQQQ - Andy/Paul-B - can we do automatic promoting (see line below)
-        f = (f - h*g) % p
-        q = (q + h) % p #QQQQ - would have auto promoted here
+function divide(num::Polynomial, den::Polynomial)# QQQQ what is the return type
+    function division_function(p::Int)
+        f, g = num % p, den % p
+        iszero(g) && throw(DivideError())# QQQQ - is there a string with it???"polynomial is zero modulo $p"))
+        q = Polynomial()
+        while degree(f) ≥ degree(g) #QQQQ - Paul and Yoni stopped here.....
+            @show degree(f), degree(g)
+            h = Polynomial( (leading(f) ÷ leading(g))(p) )  #syzergy #QQQQ - Andy/Paul-B - can we do automatic promoting (see line below)
+            f = (f - h*g) % p
+            q = (q + h) % p #QQQQ - would have auto promoted here
+        end
+        @assert iszero( (num  - (q*g + f)) %p)
+        return q, f
     end
-    @assert iszero( (num  - (q*g + f)) %p)
-    return q, f
+    return division_function
 end
+
+÷(num::Polynomial, den::Polynomial)  = (p::Int) -> first(divide(num,den)(p))
+%(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))
+
+
 
 
 # def divideby(self, other, p: int):
