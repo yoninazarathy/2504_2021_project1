@@ -41,14 +41,14 @@ end
 
 function rand(::Type{Polynomial} ; degree::Int = -1, terms::Int = -1, max_coeff::Int = 100)
     if degree == -1
-        degree = rand(Poisson(5))
+        degree = rand(Poisson(5)) #shifted Poisson
     end
 
     if terms == -1
         terms = rand(Binomial(degree+1,0.5))
     end
 
-    degrees = sample(1:degree,terms,replace = false)
+    degrees = sample(0:degree,terms,replace = false)
     coeffs = rand(1:max_coeff,terms)
     return Polynomial( [Term(coeffs[i],degrees[i]) for i in 1:length(degrees)] )
 end
@@ -145,6 +145,10 @@ end
 #QQQQ - use a "map" after making it.
 evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(tt,x) for tt in extract_all!(deepcopy(f.terms)))
 
+#QQQQ - create a different type
+# struct UnluckyPrimeError <: Excpetion
+# end
+
 """  Modular algorithm.
 f divide by g
 
@@ -155,13 +159,16 @@ p is a prime
 function divide(num::Polynomial, den::Polynomial)# QQQQ what is the return type
     function division_function(p::Int)
         f, g = num % p, den % p
+        degree(f) < degree(num) #=|| degree(g) < degree(den))=# && (println("hey"), return (nothing,nothing)) #QQQQ ask Paul/Andy...
         iszero(g) && throw(DivideError())# QQQQ - is there a string with it???"polynomial is zero modulo $p"))
         q = Polynomial()
-        while degree(f) ≥ degree(g) #QQQQ - Paul and Yoni stopped here.....
-            @show degree(f), degree(g)
+        prev_degree = degree(f)
+        while degree(f) ≥ degree(g) 
             h = Polynomial( (leading(f) ÷ leading(g))(p) )  #syzergy #QQQQ - Andy/Paul-B - can we do automatic promoting (see line below)
             f = (f - h*g) % p
-            q = (q + h) % p #QQQQ - would have auto promoted here
+            q = (q + h) % p #QQQQ - would have auto promoted 
+            prev_degree == degree(f) && break
+            prev_degree = degree(f)
         end
         @assert iszero( (num  - (q*g + f)) %p)
         return q, f
