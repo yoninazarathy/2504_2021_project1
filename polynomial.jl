@@ -71,7 +71,7 @@ iszero(p::Polynomial) = isempty(p.terms)
 function Base.show(io::IO, p::Polynomial) 
     p = deepcopy(p)
     if iszero(p)
-        print("0")
+        print(io,"0")
     else
         for t in extract_all!(p.terms)
             print(io, t, "+ ")
@@ -159,7 +159,7 @@ p is a prime
 function divide(num::Polynomial, den::Polynomial)# QQQQ what is the return type
     function division_function(p::Int)
         f, g = num % p, den % p
-        degree(f) < degree(num) #=|| degree(g) < degree(den))=# && (println("hey"), return (nothing,nothing)) #QQQQ ask Paul/Andy...
+        degree(f) < degree(num) && return nothing #QQQQ ask Paul/Andy...
         iszero(g) && throw(DivideError())# QQQQ - is there a string with it???"polynomial is zero modulo $p"))
         q = Polynomial()
         prev_degree = degree(f)

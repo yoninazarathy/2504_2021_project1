@@ -10,6 +10,10 @@ include("../poly_factorization_project.jl")
 p1 = Polynomial(Term(1,2)) + Polynomial(Term(-1,0)) #x^2 - 1
 p2 = Polynomial(Term(1,1)) + Polynomial(Term(1,0)) #x + 1
 
+
+# ext_euclid_alg(p1, p2, (a,b)-> (a%b)(101), (a,b)-> (a ÷ b)(101)   )
+
+
 # @show typeof((p1 % p2)(101))
 
 # euclid_alg(p1, p2, (a,b)-> (a%b)(101)   )
@@ -24,7 +28,7 @@ p2 = Polynomial(Term(1,1)) + Polynomial(Term(1,0)) #x + 1
 
 # QQQQ - handle tests without dividing by zero.
 using Random;
-function division_test()
+function division_test_poly()
     Random.seed!(0)
     for _ in 1:100
         print(".")
@@ -56,7 +60,35 @@ function division_test()
             # end
     end
 end
-division_test()
+
+function test_inverse_mod_poly(prime::Int=101)
+    Random.seed!(0)
+    for _ in 1:1
+        p = rand(Polynomial)
+        ip = inverse_mod(p,prime,(a,b)-> (a%b)(prime),(a,b)-> (a \divb)(prime)) 
+        @assert (n*im) % prime == 1
+    end
+end
+
+
+function euclid_test_poly()
+    Random.seed!(0)
+    for _ in 1:3
+        print(".")
+        p1 = rand(Polynomial)
+        p2 = rand(Polynomial)
+        @show p1
+        @show p2
+        prime = 101  #7919 
+        g = euclid_alg(p1, p2, (a,b)-> (a%b)(prime))
+        @show (p1 % g)(prime), (p2 % g)(prime)
+    end
+end
+
+euclid_test_poly()
+
+
+# division_test()
 
 # p1 = Polynomial([(2,5),(4,7),(9,17),(2,4),(-3,18),(-6,8)])
 # p1 % 3
