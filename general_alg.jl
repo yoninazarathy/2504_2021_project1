@@ -10,13 +10,15 @@ function quo(a::T,b::T) where T <: Int
     return 1 + quo(a-b, b)
 end
 
-function euclid_alg(a, b, rem_function = %)
+function euclid_alg(a, b, rem_function = %,level=5)
+    level == 0 && return nothing
+    println("------")
     @show a
     @show b
+    @show rem_function(a,b)
     b == 0 && return a
-    return euclid_alg(b, rem_function(a,b), rem_function)
+    return euclid_alg(b, rem_function(a,b), rem_function,level-1)
 end
-
 
 function ext_euclid_alg(a, b, rem_function = %, div_function = ÷)
     a == 0 && return b, 0, 1

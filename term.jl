@@ -53,7 +53,7 @@ end
 
 function ÷(t1::Term,t2::Term)#::QQQQ what is
     @assert t1.degree ≥ t2.degree #QQQQ rename inverse_mod to inverse later
-    f(p::Int)::Term = Term((t1.coeff * inverse_mod(t2.coeff, p)) %p, t1.degree - t2.degree)
+    f(p::Int)::Term = Term((t1.coeff * int_inverse_mod(t2.coeff, p)) %p, t1.degree - t2.degree)
 end
 
 #QQQQ - maybe there is a better "julian" name for it.

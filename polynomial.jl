@@ -125,6 +125,7 @@ end
 -(p::Polynomial) = Polynomial(map((pt)->-pt, p.terms)) #Can't specify return Polynomial?
 -(p1::Polynomial, p2::Polynomial)::Polynomial = p1 + (-p2)
 
+##Our naive multiplier
 function *(p1::Polynomial, p2::Polynomial)::Polynomial
     p_out = Polynomial()
     for tt in extract_all!(deepcopy(p1.terms)) #tt is target term
