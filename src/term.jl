@@ -5,7 +5,7 @@ struct Term  #structs are immutable by default
     coeff::Int
     degree::Int
     function Term(coeff::Int, degree::Int)
-        @assert degree ≥ 0
+        degree < 0 && error("Degree must be non-negative")
         coeff != 0 ? new(coeff,degree) : new(coeff,0)
     end
 end
@@ -14,8 +14,6 @@ end
 QQQQ
 """
 Base.show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")
-
-
 
 """
 QQQQ
@@ -55,7 +53,10 @@ QQQQ
 """
 mod(t::Term,p::Int)::Term = Term(mod(t.coeff,p), t.degree)
 
-
+"""
+QQQQ
+"""
+derivative(t::Term) = Term(t.coeff*t.degree,max(t.degree-1,0))
 
 """
 QQQQ

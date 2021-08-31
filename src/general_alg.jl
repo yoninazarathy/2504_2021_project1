@@ -10,10 +10,17 @@ end
 """
 QQQQ
 """
-function euclid_alg(a, b, rem_function = %)
+function euclid_alg(a, b; rem_function = %)
     b == 0 && return a
-    return euclid_alg(b, rem_function(a,b), rem_function)
+    return euclid_alg(b, rem_function(a,b); rem_function = rem_function)
 end
+
+"""
+QQQQ
+"""
+euclid_alg(a...) = foldl((a,b)->euclid_alg(a,b), a; init = 0)
+euclid_alg(a::Vector{T}) where T <: Int = euclid_alg(a...)
+
 
 """
 QQQQ

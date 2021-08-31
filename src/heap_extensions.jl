@@ -1,6 +1,3 @@
-
-#QQQQ - Make a copy for the heap
-
 """
 QQQQ
 """
@@ -21,6 +18,7 @@ QQQQ
 """
 map(f,h::MutableBinaryMaxHeap) = map!(f,deepcopy(h))
 
-#QQQQ - make the iterate
-
-#QQQQ - T
+"""
+QQQQ
+"""
+iterate(h::MutableBinaryMaxHeap, state=1) = state > length(h) ? nothing : (h.nodes[state].value, state+1)

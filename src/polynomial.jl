@@ -2,8 +2,11 @@
 QQQQ
 """
 struct Polynomial
-    #QQQQ MutableBinaryMaxHeap or BinaryMaxHeap
-    terms::MutableBinaryMaxHeap{Term}   #Will never have terms with 0 coefficient
+    terms::MutableBinaryMaxHeap{Term}   
+        #The terms heap needs to satisfy:
+            # Will never have terms with 0 coefficient
+            # Will never have two terms with same coefficient
+        #An empty terms heap means the zero polynomial
     Polynomial() = new(MutableBinaryMaxHeap{Term}())
     Polynomial(h::MutableBinaryMaxHeap{Term}) = new(h) #QQQQ - check not to have 0 coefficient
 end
@@ -28,42 +31,54 @@ function Polynomial(tv::Vector{Term})
     return Polynomial(terms)
 end
 
-#QQQQ - Yoni clean up to use above constuctors
-# """
-# Convenience constructor 
-# """
-# function Polynomial(terms_tuples::Vector{Tuple{Int,Int}})
-#     p = Polynomial()
-#     for tt in terms_tuples
-#         push!(p,Term(tt...))
-#     end
-#     return p
-# end
-
-#QQQQ - ideally do rand
-# function rand(u::Type{T})::Polynomial where T<:Polynomial
-#     @show hello
-# end
-
-
-#QQQQ - Yoni fiddle
+"""
+QQQQ
+"""
+zero(::Type{Polynomial}) = Polynomial()
 
 """
 QQQQ
 """
-function rand(::Type{Polynomial} ; degree::Int = -1, terms::Int = -1, max_coeff::Int = 100)
+one(::Type{Polynomial}) = Polynomial(Term(1,0))
+
+"""
+QQQQ
+"""
+function rand(::Type{Polynomial} ; 
+                degree::Int = -1, 
+                terms::Int = -1, 
+                max_coeff::Int = 100, 
+                mean_degree::Float64 = 5.0,
+                prob_term::Float64  = 0.7)
+
     if degree == -1
-        degree = rand(Poisson(5)) #shifted Poisson
+        degree = rand(Poisson(mean_degree))
     end
 
     if terms == -1
-        terms = rand(Binomial(degree+1,0.5))
+        terms = rand(Binomial(degree+1,prob_term))
     end
 
     degrees = sample(0:degree,terms,replace = false)
     coeffs = rand(1:max_coeff,terms)
     return Polynomial( [Term(coeffs[i],degrees[i]) for i in 1:length(degrees)] )
 end
+
+"""
+QQQQ
+"""
+length(p::Polynomial) = length(p.terms)
+
+
+"""
+QQQQ
+"""
+iterate(p::Polynomial, state=1) = iterate(p.terms, state)
+
+"""
+QQQQ
+"""
+coeffs(p::Polynomial) = [t.coeff for t in p]
 
 
 #QQQQ Handle error if pushing another term of same degree
@@ -92,6 +107,22 @@ degree(p::Polynomial)::Int = leading(p).degree
 QQQQ
 """
 iszero(p::Polynomial) = isempty(p.terms)
+
+"""
+QQQQ
+"""
+content(p::Polynomial) = euclid_alg(coeffs(p))
+
+
+"""
+QQQQ
+"""
+derivative(p::Polynomial) = Polynomial(map(derivative,p.terms))
+
+"""
+QQQQ
+"""
+derivative!(p::Polynomial) = map!(derivative,p.terms)
 
 #QQQQ - Improve pretty printing
 """
@@ -260,3 +291,23 @@ mod(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))
 
 #         return q, r
 
+
+#QQQQ - Consider where this goes... 
+"""
+QQQQ
+"""
+function extended_euclid_alg(a::Polynomial, b::Polynomial, prime::Int)
+    old_r, r = mod(a,prime), mod(b,prime)
+    old_s, s = one(Polynomial), zero(Polynomial)
+    old_t, t = zero(Polynomial), one(Polynomial)
+
+    while !iszero(mod(r,prime))
+        q = divide(old_r, r)(prime) |> first
+        old_r, r = r, mod(old_r - q*r, prime)
+        old_s, s = s, mod(old_s - q*s, prime)
+        old_t, t = t, mod(old_t - q*t, prime)
+    end
+    g, s, t = old_r, old_s, old_t
+    @assert mod(s*a + t*b - g, prime) == 0
+    return g, s, t  
+end
