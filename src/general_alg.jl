@@ -1,15 +1,6 @@
 """
 QQQQ
 """
-function remainder(a::T,b::T) where T <: Int #QQQQ Note that later we'll extend this to non-integral domains
-    a < 0 && return remainder(-a,b) #short circuit evaluation  #later replace `0` with `zero(T)`
-    a < b && return a
-    return remainder(a-b,b)
-end
-
-"""
-QQQQ
-"""
 function quo(a::T,b::T) where T <: Int
     a < 0 && return -quo(-a,b)
     a < b && return 0

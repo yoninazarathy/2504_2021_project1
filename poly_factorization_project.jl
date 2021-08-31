@@ -1,6 +1,7 @@
 using DataStructures, Distributions, StatsBase, Random
 
-import Base: push!, pop!, iszero, show, isless, map, map!, +, -, *, %, ÷, ==, rand, rem
+import Base: %
+import Base: push!, pop!, iszero, show, isless, map, map!, +, -, *, mod, ÷, ==, rand, rem
 
 include("src/heap_extensions.jl")
 include("src/int_general_alg.jl")

@@ -162,10 +162,6 @@ end
 QQQQ
 """
 *(t::Term,p1::Polynomial)::Polynomial = iszero(t) ? Polynomial() : Polynomial(map((pt)->t*pt, p1.terms))
-
-"""
-QQQQ
-"""
 *(p1::Polynomial, t::Term)::Polynomial = t*p1
 
 """
@@ -194,10 +190,10 @@ end
 """
 QQQQ
 """
-function %(f::Polynomial, p::Int)::Polynomial
+function mod(f::Polynomial, p::Int)::Polynomial
     p_out = Polynomial()
     for tt in extract_all!(deepcopy(f.terms))
-        push!(p_out, tt % p) #if coeff reduced to zero, push! will handle it
+        push!(p_out, mod(tt, p)) #if coeff reduced to zero, push! will handle it
     end
     return p_out
 end
@@ -221,19 +217,19 @@ p is a prime
 """
 function divide(num::Polynomial, den::Polynomial)# QQQQ what is the return type
     function division_function(p::Int)
-        f, g = num % p, den % p
+        f, g = mod(num,p), mod(den,p)
         degree(f) < degree(num) && return nothing #QQQQ ask Paul/Andy...
         iszero(g) && throw(DivideError())# QQQQ - is there a string with it???"polynomial is zero modulo $p"))
         q = Polynomial()
         prev_degree = degree(f)
         while degree(f) ≥ degree(g) 
             h = Polynomial( (leading(f) ÷ leading(g))(p) )  #syzergy #QQQQ - Andy/Paul-B - can we do automatic promoting (see line below)
-            f = (f - h*g) % p
-            q = (q + h) % p #QQQQ - would have auto promoted 
+            f = mod((f - h*g), p)
+            q = mod((q + h), p) #QQQQ - would have auto promoted 
             prev_degree == degree(f) && break
             prev_degree = degree(f)
         end
-        @assert iszero( (num  - (q*g + f)) %p)
+        @assert iszero( mod((num  - (q*g + f)),p))
         return q, f
     end
     return division_function
@@ -247,7 +243,7 @@ QQQQ
 """
 QQQQ
 """
-%(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))
+mod(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))
 
 
 
