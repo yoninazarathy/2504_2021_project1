@@ -1,20 +1,32 @@
-function remainder(a::T,b::T) where T <: Int #Note that later we'll extend this to integral domains
-    a < 0 && return remainder(-a,b) #short circuit evalution  #later replace `0` with `zero(T)`
+"""
+QQQQ
+"""
+function remainder(a::T,b::T) where T <: Int #QQQQ Note that later we'll extend this to non-integral domains
+    a < 0 && return remainder(-a,b) #short circuit evaluation  #later replace `0` with `zero(T)`
     a < b && return a
     return remainder(a-b,b)
 end
 
+"""
+QQQQ
+"""
 function quo(a::T,b::T) where T <: Int
     a < 0 && return -quo(-a,b)
     a < b && return 0
     return 1 + quo(a-b, b)
 end
 
+"""
+QQQQ
+"""
 function euclid_alg(a, b, rem_function = %)
     b == 0 && return a
     return euclid_alg(b, rem_function(a,b), rem_function)
 end
 
+"""
+QQQQ
+"""
 function ext_euclid_alg(a, b, rem_function = %, div_function = ÷)
     a == 0 && return b, 0, 1
     g, t, s = ext_euclid_alg(rem_function(b,a), a, rem_function, div_function)
@@ -23,6 +35,7 @@ function ext_euclid_alg(a, b, rem_function = %, div_function = ÷)
     return g, s, t
 end
 
+"""
+QQQQ
+"""
 pretty_print_egcd((a,b),(g,s,t)) = println("$a × $s + $b × $t = $g") #\times + [TAB]
-
-

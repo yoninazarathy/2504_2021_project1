@@ -1,3 +1,6 @@
+"""
+QQQQ
+"""
 struct Polynomial
     #QQQQ MutableBinaryMaxHeap or BinaryMaxHeap
     terms::MutableBinaryMaxHeap{Term}   #Will never have terms with 0 coefficient
@@ -5,12 +8,18 @@ struct Polynomial
     Polynomial(h::MutableBinaryMaxHeap{Term}) = new(h) #QQQQ - check not to have 0 coefficient
 end
 
+"""
+QQQQ
+"""
 function Polynomial(t::Term)
     terms = MutableBinaryMaxHeap{Term}()
     t.coeff != 0 && push!(terms,t)
     return Polynomial(terms)
 end
 
+"""
+QQQQ
+"""
 function Polynomial(tv::Vector{Term})
     terms = MutableBinaryMaxHeap{Term}()
     for t in tv
@@ -39,6 +48,9 @@ end
 
 #QQQQ - Yoni fiddle
 
+"""
+QQQQ
+"""
 function rand(::Type{Polynomial} ; degree::Int = -1, terms::Int = -1, max_coeff::Int = 100)
     if degree == -1
         degree = rand(Poisson(5)) #shifted Poisson
@@ -55,6 +67,9 @@ end
 
 
 #QQQQ Handle error if pushing another term of same degree
+"""
+QQQQ
+"""
 function push!(p::Polynomial, t::Term) 
     iszero(t) && return #don't push a zero
     push!(p.terms,t)
@@ -63,11 +78,25 @@ pop!(p::Polynomial) = pop!(p.terms)
 
 
 #QQQQ - Maybe re-think when doing mod-p
+"""
+QQQQ
+"""
 leading(p::Polynomial)::Term = isempty(p.terms) ? Term(0,0) : first(p.terms)  #QQQQ should maybe use a "zero method" instead of Term(0,0)
+
+"""
+QQQQ
+"""
 degree(p::Polynomial)::Int = leading(p).degree 
+
+"""
+QQQQ
+"""
 iszero(p::Polynomial) = isempty(p.terms)
 
 #QQQQ - Improve pretty printing
+"""
+QQQQ
+"""
 function Base.show(io::IO, p::Polynomial) 
     p = deepcopy(p)
     if iszero(p)
@@ -79,14 +108,22 @@ function Base.show(io::IO, p::Polynomial)
     end
 end
 
+"""
+QQQQ
+"""
 ==(p1::Polynomial, p2::Polynomial)::Bool = p1.terms == p2.terms
 
 
 #QQQQ - is this sensible (Paul/Andy)
+"""
+QQQQ
+"""
 ==(p::Polynomial, n::T) where T <: Real = iszero(p) == iszero(n)
 
 #QQQQ - Maybe have the "distributive addition" paradigm like multiplication (less efficient)
-
+"""
+QQQQ
+"""
 function +(p1::Polynomial, p2::Polynomial)::Polynomial
     p1, p2 = deepcopy(p1), deepcopy(p2)
     p3 = Polynomial()
@@ -109,7 +146,9 @@ function +(p1::Polynomial, p2::Polynomial)::Polynomial
     return p3
 end
 
-
+"""
+QQQQ
+"""
 function -(p::Polynomial)::Polynomial
     p_temp = deepcopy(p)
     p_out = Polynomial()
@@ -119,13 +158,30 @@ function -(p::Polynomial)::Polynomial
     return p_out
 end
 
+"""
+QQQQ
+"""
 *(t::Term,p1::Polynomial)::Polynomial = iszero(t) ? Polynomial() : Polynomial(map((pt)->t*pt, p1.terms))
+
+"""
+QQQQ
+"""
 *(p1::Polynomial, t::Term)::Polynomial = t*p1
 
+"""
+QQQQ
+"""
 -(p::Polynomial) = Polynomial(map((pt)->-pt, p.terms)) #Can't specify return Polynomial?
+
+"""
+QQQQ
+"""
 -(p1::Polynomial, p2::Polynomial)::Polynomial = p1 + (-p2)
 
 ##Our naive multiplier
+"""
+QQQQ
+"""
 function *(p1::Polynomial, p2::Polynomial)::Polynomial
     p_out = Polynomial()
     for tt in extract_all!(deepcopy(p1.terms)) #tt is target term
@@ -135,6 +191,9 @@ function *(p1::Polynomial, p2::Polynomial)::Polynomial
 end
 
 #QQQQ - Yoni - use map as needed and also maintain not having Term(0,0) as invairant
+"""
+QQQQ
+"""
 function %(f::Polynomial, p::Int)::Polynomial
     p_out = Polynomial()
     for tt in extract_all!(deepcopy(f.terms))
@@ -144,6 +203,9 @@ function %(f::Polynomial, p::Int)::Polynomial
 end
 
 #QQQQ - use a "map" after making it.
+"""
+QQQQ
+"""
 evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(tt,x) for tt in extract_all!(deepcopy(f.terms)))
 
 #QQQQ - create a different type
@@ -177,7 +239,14 @@ function divide(num::Polynomial, den::Polynomial)# QQQQ what is the return type
     return division_function
 end
 
+"""
+QQQQ
+"""
 ÷(num::Polynomial, den::Polynomial)  = (p::Int) -> first(divide(num,den)(p))
+
+"""
+QQQQ
+"""
 %(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))
 
 
