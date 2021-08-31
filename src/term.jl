@@ -11,6 +11,17 @@ struct Term  #structs are immutable by default
 end
 
 """
+Creates the zero term.
+"""
+zero(::Type{Term}) = Term(0,0)
+
+"""
+Creates the unit term.
+"""
+one(::Type{Term}) = Term(1,0)
+
+
+"""
 QQQQ
 """
 Base.show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")

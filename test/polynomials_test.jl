@@ -23,6 +23,24 @@ function prod_test_poly(;N::Int = 10^3, N_prods::Int = 20, seed::Int = 0)
     println("prod_test_poly - PASSED")
 end
 
+"""
+Tests QQQQ.
+"""
+function prod_derivative_test_poly(;N::Int = 10^4,  seed::Int = 0)
+    Random.seed!(seed)
+    for _ in 1:N
+        println("----")
+        p1 = rand(Polynomial)
+        p2 = rand(Polynomial)
+        p1d = derivative(p1)
+        p2d = derivative(p2)
+        prod = p1*p2
+        derivative!(prod)
+        @assert (p1d*p2) + (p1*p2d) == prod
+    end
+    println("prod_derivative_test_poly - PASSED")
+end
+
 
 """
 Tests QQQQ.

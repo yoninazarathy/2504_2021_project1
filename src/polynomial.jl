@@ -1,5 +1,5 @@
 """
-QQQQ
+A Polynomial type - designed to be for polynomials with integer coefficients.
 """
 struct Polynomial
     terms::MutableBinaryMaxHeap{Term}   
@@ -12,7 +12,7 @@ struct Polynomial
 end
 
 """
-QQQQ
+Construct a polynomial with a single term.
 """
 function Polynomial(t::Term)
     terms = MutableBinaryMaxHeap{Term}()
@@ -21,7 +21,7 @@ function Polynomial(t::Term)
 end
 
 """
-QQQQ
+Construct a polynomial with a vector of terms.
 """
 function Polynomial(tv::Vector{Term})
     terms = MutableBinaryMaxHeap{Term}()
@@ -32,17 +32,17 @@ function Polynomial(tv::Vector{Term})
 end
 
 """
-QQQQ
+Creates the zero polynomial.
 """
 zero(::Type{Polynomial}) = Polynomial()
 
 """
-QQQQ
+Creates the unit polynomial.
 """
-one(::Type{Polynomial}) = Polynomial(Term(1,0))
+one(::Type{Polynomial}) = Polynomial(one(Term))
 
 """
-QQQQ
+Generates a random polynomial.
 """
 function rand(::Type{Polynomial} ; 
                 degree::Int = -1, 
@@ -65,64 +65,68 @@ function rand(::Type{Polynomial} ;
 end
 
 """
-QQQQ
+The number of terms of the polynomial.
 """
 length(p::Polynomial) = length(p.terms)
 
 
 """
-QQQQ
+Allows to do iteration over the terms of the polynomial. The iteration is in an arbitrary order.
 """
 iterate(p::Polynomial, state=1) = iterate(p.terms, state)
 
 """
-QQQQ
+Returns the coefficients of the polynomial.
 """
-coeffs(p::Polynomial) = [t.coeff for t in p]
+coeffs(p::Polynomial)::Vector{Int} = [t.coeff for t in p]
 
 
 #QQQQ Handle error if pushing another term of same degree
 """
-QQQQ
+Push a new term into the polynomial.
 """
 function push!(p::Polynomial, t::Term) 
     iszero(t) && return #don't push a zero
     push!(p.terms,t)
 end
-pop!(p::Polynomial) = pop!(p.terms)
+
+
+"""
+Pop the leading term out of the polynomial.
+"""
+pop!(p::Polynomial)::Term = pop!(p.terms)
 
 
 #QQQQ - Maybe re-think when doing mod-p
 """
-QQQQ
+The leading term of the polynomial.
 """
-leading(p::Polynomial)::Term = isempty(p.terms) ? Term(0,0) : first(p.terms)  #QQQQ should maybe use a "zero method" instead of Term(0,0)
+leading(p::Polynomial)::Term = isempty(p.terms) ? zero(Term) : first(p.terms)  #QQQQ should maybe use a "zero method" instead of Term(0,0)
 
 """
-QQQQ
+The degree of the polynomial.
 """
 degree(p::Polynomial)::Int = leading(p).degree 
 
 """
-QQQQ
+Check if the polynomial is zero.
 """
-iszero(p::Polynomial) = isempty(p.terms)
+iszero(p::Polynomial)::Bool = isempty(p.terms)
 
 """
-QQQQ
+The content of the polynomial is the GCD of its coefficients.
 """
-content(p::Polynomial) = euclid_alg(coeffs(p))
-
-
-"""
-QQQQ
-"""
-derivative(p::Polynomial) = Polynomial(map(derivative,p.terms))
+content(p::Polynomial)::Int = euclid_alg(coeffs(p))
 
 """
-QQQQ
+Create a new polynomial which is the derivative of the polynomial.
 """
-derivative!(p::Polynomial) = map!(derivative,p.terms)
+derivative(p::Polynomial)::Polynomial = Polynomial(map(derivative,p.terms)) #QQQQ Fix to handle two constants...
+
+"""
+Take the derivative of the polynomial and return itself.
+"""
+derivative!(p::Polynomial)::Polynomial = (map!(derivative,p.terms), return p)
 
 #QQQQ - Improve pretty printing
 """
