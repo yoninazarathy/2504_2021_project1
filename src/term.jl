@@ -1,4 +1,6 @@
-
+"""
+A term.
+"""
 struct Term  #structs are immutable by default
     coeff::Int
     degree::Int
@@ -9,6 +11,9 @@ struct Term  #structs are immutable by default
 end
 
 Base.show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")
+
+
+
 
 #TODO:
 #     def __str__(self) -> str:
@@ -31,7 +36,6 @@ Base.show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")
 
 Base.iszero(t::Term) = iszero(t.coeff)
 
-import Base: +, -, *, %, ÷, isless
 
 isless(t1::Term,t2::Term) =  t1.degree == t2.degree ? (t1.coeff < t2.coeff) : (t1.degree < t2.degree)  
 
@@ -40,7 +44,7 @@ function +(t1::Term,t2::Term)::Term
     Term(t1.coeff + t2.coeff, t1.degree)
 end
 
--(t::Term) = Term(-t.coeff,t.degree) 
+-(t::Term) = Term(-t.coeff,t.degree)  #QQQQ - check with Andy why can't have ::Term as return value
 -(t1::Term,t2::Term)::Term = t1 + (-t2) 
 
 *(t1::Term,t2::Term)::Term = Term(t1.coeff * t2.coeff, t1.degree + t2.degree)
@@ -49,7 +53,7 @@ end
 
 function ÷(t1::Term,t2::Term)#::QQQQ what is
     @assert t1.degree ≥ t2.degree #QQQQ rename inverse_mod to inverse later
-    f(p::Int)::Term = Term((t1.coeff * inverse_mod(t2.coeff, p)) %p, t1.degree - t2.degree)
+    f(p::Int)::Term = Term((t1.coeff * int_inverse_mod(t2.coeff, p)) %p, t1.degree - t2.degree)
 end
 
 #QQQQ - maybe there is a better "julian" name for it.

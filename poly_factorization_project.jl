@@ -1,9 +1,9 @@
-using DataStructures, Distributions, StatsBase
+using DataStructures, Distributions, StatsBase, Random
 
 import Base: push!, pop!, iszero, show, isless, map, map!, +, -, *, %, ÷, ==, rand, rem
 
-include("heap_extensions.jl")
-include("int_general_alg.jl")
-include("general_alg.jl")
-include("term.jl")
-include("polynomial.jl")
+include("src/heap_extensions.jl")
+include("src/int_general_alg.jl")
+include("src/general_alg.jl")
+include("src/term.jl")
+include("src/polynomial.jl")

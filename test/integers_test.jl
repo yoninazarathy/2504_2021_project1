@@ -1,10 +1,9 @@
-include("../poly_factorization_project.jl")
-
-using Random
-
-function test_euclid_ints()
+"""
+Tests Euclidean GCD algorithm for integers.
+"""
+function test_euclid_ints(;N::Int = 10^4)
     Random.seed!(0)
-    for _ in 1:1000
+    for _ in 1:N
         n1 = rand(1:10^6)
         n2 = rand(1:10^6)
         g = euclid_alg(n1,n2)
@@ -13,9 +12,12 @@ function test_euclid_ints()
     println("test_euclid_ints - PASSED")
 end
 
-function test_ext_euclid_ints()
+"""
+Tests the extended Euclidean GCD algorithm for integers.
+"""
+function test_ext_euclid_ints(;N::Int = 10^4)
     Random.seed!(0)
-    for _ in 1:1000
+    for _ in 1:N
         n1 = rand(1:10^6)
         n2 = rand(1:10^6)
         g, s, t = ext_euclid_alg(n1,n2)
@@ -25,10 +27,13 @@ function test_ext_euclid_ints()
     println("test_ext_euclid_ints - PASSED")
 end
 
-function test_inverse_mod_ints(prime::Int=101)
+"""
+Tests the computation of inverse mod for integers.
+"""
+function test_inverse_mod_ints(;prime::Int=101,N::Int=10^4)
     Random.seed!(0)
-    for _ in 1:1000
-        n = rand(1:10^6)
+    for _ in 1:N
+        n = rand(1:10^6)#QQQQ 
         if n % prime == 0
             continue #QQQQ - handle to actually catch the error thrown and continue testing...
         end
@@ -37,9 +42,3 @@ function test_inverse_mod_ints(prime::Int=101)
     end
     println("test_inverse_mod_ints - PASSED")
 end
-
-
-
-test_euclid_ints()
-test_ext_euclid_ints()
-test_inverse_mod_ints()

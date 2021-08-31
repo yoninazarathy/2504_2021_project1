@@ -1,18 +1,13 @@
-include("../poly_factorization_project.jl")
-
-# QQQQ - handle tests without dividing by zero.
-using Random;
-function division_test_poly()
-    Random.seed!(0)
-    for _ in 1:100
-        # print(".")
+"""
+Tests QQQQ.
+"""
+function division_test_poly(;prime::Int = 101, N::Int = 10^4, seed::Int = 0)
+    # QQQQ - handle tests without dividing by zero.
+    Random.seed!(seed)
+    for _ in 1:N
         p1 = rand(Polynomial)
         p2 = rand(Polynomial)
-        # @show p1
-        # @show p2
-        global p_prod = p1*p2
-        prime = 101  #7919 
-        # p_prod_reduced =  p_prod % prime
+        p_prod = p1*p2
         q, r = Polynomial(), Polynomial() #QQQQ how to expose from try to outside of it...
         try
             q, r = divide(p_prod,p2)(prime)
@@ -32,26 +27,17 @@ function division_test_poly()
     println("division_test_poly - PASSED")
 end
 
-function euclid_test_poly(;prime::Int=101)
-    Random.seed!(0)
-    for _ in 1:2
-        # print(".")
+"""
+Tests QQQQ.
+"""
+function euclid_test_poly(;prime::Int=101, N::Int = 1,seed::Int = 0)
+    Random.seed!(seed)
+    for _ in 1:N
         p1 = rand(Polynomial)
         p2 = rand(Polynomial)
-        @show p1
-        @show p2
-
-        @show divide(p2,p1)(prime)
-
-        # g = euclid_alg(p1, p2, (a,b)-> (a%b)(prime))
+        g = euclid_alg(p1, p2, (a,b)-> (a%b)(prime))
         # @show (p1 % g)(prime), (p2 % g)(prime)
+        @assert false
     end
     println("euclid_test_poly - PASSED")
 end
-
-
-
-
-# division_test_poly()
-euclid_test_poly()
-# test_inverse_mod_poly()
