@@ -119,14 +119,23 @@ The content of the polynomial is the GCD of its coefficients.
 content(p::Polynomial)::Int = euclid_alg(coeffs(p))
 
 """
-Create a new polynomial which is the derivative of the polynomial.
+The prim part (multiply a polynomial by the inverse of its content)
 """
-derivative(p::Polynomial)::Polynomial = Polynomial(map(derivative,p.terms)) #QQQQ Fix to handle two constants...
+prim_part(p::Polynomial)::Polynomial = p ÷ content(p)
+
 
 """
-Take the derivative of the polynomial and return itself.
+Create a new polynomial which is the derivative of the polynomial.
 """
-derivative!(p::Polynomial)::Polynomial = (map!(derivative,p.terms), return p)
+function derivative(p::Polynomial)::Polynomial 
+    der_p = Polynomial()
+    for term in p
+        der_term = derivative(term)
+        !iszero(der_term) && push!(der_p,der_term)
+    end
+    return der_p
+end
+
 
 #QQQQ - Improve pretty printing
 """
@@ -202,6 +211,17 @@ QQQQ
 """
 QQQQ
 """
+*(n::Int,p::Polynomial)::Polynomial = p*Term(n,1)
+*(p::Polynomial,n::Int)::Polynomial = n*p
+
+"""
+QQQQ.  Warning this may not make sense if n does not divide all the coefficients of p.
+"""
+÷(p::Polynomial,n::Int)::Polynomial = Polynomial(map((pt)->pt ÷ n, p.terms))
+
+"""
+QQQQ
+"""
 -(p::Polynomial) = Polynomial(map((pt)->-pt, p.terms)) #Can't specify return Polynomial?
 
 """
@@ -225,10 +245,10 @@ end
 """
 QQQQ
 """
-function mod(f::Polynomial, p::Int)::Polynomial
+function smod(f::Polynomial, p::Int)::Polynomial
     p_out = Polynomial()
     for tt in extract_all!(deepcopy(f.terms))
-        push!(p_out, mod(tt, p)) #if coeff reduced to zero, push! will handle it
+        push!(p_out, smod(tt, p)) #if coeff reduced to zero, push! will handle it
     end
     return p_out
 end
@@ -252,19 +272,19 @@ p is a prime
 """
 function divide(num::Polynomial, den::Polynomial)# QQQQ what is the return type
     function division_function(p::Int)
-        f, g = mod(num,p), mod(den,p)
+        f, g = smod(num,p), smod(den,p)
         degree(f) < degree(num) && return nothing #QQQQ ask Paul/Andy...
         iszero(g) && throw(DivideError())# QQQQ - is there a string with it???"polynomial is zero modulo $p"))
         q = Polynomial()
         prev_degree = degree(f)
         while degree(f) ≥ degree(g) 
             h = Polynomial( (leading(f) ÷ leading(g))(p) )  #syzergy #QQQQ - Andy/Paul-B - can we do automatic promoting (see line below)
-            f = mod((f - h*g), p)
-            q = mod((q + h), p) #QQQQ - would have auto promoted 
+            f = smod((f - h*g), p)
+            q = smod((q + h), p) #QQQQ - would have auto promoted 
             prev_degree == degree(f) && break
             prev_degree = degree(f)
         end
-        @assert iszero( mod((num  - (q*g + f)),p))
+        @assert iszero( smod((num  - (q*g + f)),p))
         return q, f
     end
     return division_function
@@ -278,7 +298,7 @@ QQQQ
 """
 QQQQ
 """
-mod(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))
+rem(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))
 
 
 
@@ -301,17 +321,23 @@ mod(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))
 QQQQ
 """
 function extended_euclid_alg(a::Polynomial, b::Polynomial, prime::Int)
-    old_r, r = mod(a,prime), mod(b,prime)
+    old_r, r = smod(a,prime), smod(b,prime)
+    @show old_r, r
     old_s, s = one(Polynomial), zero(Polynomial)
     old_t, t = zero(Polynomial), one(Polynomial)
 
-    while !iszero(mod(r,prime))
-        q = divide(old_r, r)(prime) |> first
-        old_r, r = r, mod(old_r - q*r, prime)
-        old_s, s = s, mod(old_s - q*s, prime)
-        old_t, t = t, mod(old_t - q*t, prime)
+    cnt = 0
+
+    while !iszero(smod(r,prime)) && cnt < 20
+        cnt += 1
+        @show cnt
+        q = divide(old_r, r)(prime) |> first #QQQQ cleanup
+        @show q
+        old_r, r = r, smod(old_r - q*r, prime)
+        old_s, s = s, smod(old_s - q*s, prime)
+        old_t, t = t, smod(old_t - q*t, prime)
     end
     g, s, t = old_r, old_s, old_t
-    @assert mod(s*a + t*b - g, prime) == 0
+    @assert smod(s*a + t*b - g, prime) == 0
     return g, s, t  
 end

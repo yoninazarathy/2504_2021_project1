@@ -62,7 +62,12 @@ QQQQ
 """
 QQQQ
 """
-mod(t::Term,p::Int)::Term = Term(mod(t.coeff,p), t.degree)
+÷(t::Term,n::Int)::Term = Term(t.coeff ÷n, t.degree)
+
+"""
+QQQQ
+"""
+smod(t::Term,p::Int)::Term = Term(smod(t.coeff,p), t.degree)
 
 """
 QQQQ
@@ -72,9 +77,9 @@ derivative(t::Term) = Term(t.coeff*t.degree,max(t.degree-1,0))
 """
 QQQQ
 """
-function ÷(t1::Term,t2::Term)#::QQQQ what is
-    @assert t1.degree ≥ t2.degree #QQQQ rename inverse_mod to inverse later
-    f(p::Int)::Term = Term(mod((t1.coeff * int_inverse_mod(t2.coeff, p)), p), t1.degree - t2.degree)
+function ÷(t1::Term,t2::Term)#::QQQQ what is return value???
+    @assert t1.degree ≥ t2.degree
+    f(p::Int)::Term = Term(smod((t1.coeff * int_inverse_smod(t2.coeff, p)), p), t1.degree - t2.degree)
 end
 
 #QQQQ - maybe there is a better "julian" name for it.
