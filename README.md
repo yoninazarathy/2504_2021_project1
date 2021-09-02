@@ -6,8 +6,22 @@ This project implements polynomial arithmetic and polynomial factorization for p
 
 Students are supposed to fork the project and create their modifications and improvements according [Project1 description](https://courses.smp.uq.edu.au/MATH2504/assessment_html/project1.html).
 
-To load all functionallity run
+To load all functionallity run:
 
 ```
-include("poly_factorization_project.jl")
+julia> include("poly_factorization_project.jl")
 ```
+
+You may then use functionallity such as,
+
+```
+julia> gcd(rand(Polynomial) + rand(Polynomial), rand(Polynomial), 101)
+```
+
+To execute all unit tests run:
+
+```
+julia> include("run_tests.jl")
+```
+
+You may see examples in `example_script.jl` and run that script line by line.
