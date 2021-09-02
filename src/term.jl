@@ -1,3 +1,15 @@
+#############################################################################
+#############################################################################
+#
+# This file defines the Term type with several operations 
+#                                                                               
+#############################################################################
+#############################################################################
+
+##############################
+# Term type and construction #
+##############################
+
 """
 A term.
 """
@@ -13,31 +25,48 @@ end
 """
 Creates the zero term.
 """
-zero(::Type{Term}) = Term(0,0)
+zero(::Type{Term})::Term = Term(0,0)
 
 """
 Creates the unit term.
 """
-one(::Type{Term}) = Term(1,0)
+one(::Type{Term})::Term = Term(1,0)
 
+###########
+# Display #
+###########
 
 """
-QQQQ
+Show a term.
 """
+#STD: Improve show to be as good as possible
 Base.show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")
 
-"""
-QQQQ
-"""
-Base.iszero(t::Term) = iszero(t.coeff)
+########################
+# Queries about a term #
+########################
 
 """
-QQQQ
+Check if a term is 0.
 """
-isless(t1::Term,t2::Term) =  t1.degree == t2.degree ? (t1.coeff < t2.coeff) : (t1.degree < t2.degree)  
+Base.iszero(t::Term)::Bool = iszero(t.coeff)
 
 """
-QQQQ
+Compare two terms.
+"""
+isless(t1::Term,t2::Term)::Bool =  t1.degree == t2.degree ? (t1.coeff < t2.coeff) : (t1.degree < t2.degree)  
+
+"""
+Evaluate a term at a point x.
+"""
+evaluate(t::Term, x::T) where T <: Number = t.coeff * x^t.degree
+
+##########################
+# Operations with a term #
+##########################
+
+"""
+Add two terms of the same degree.
 """
 function +(t1::Term,t2::Term)::Term
     @assert t1.degree == t2.degree
@@ -45,45 +74,42 @@ function +(t1::Term,t2::Term)::Term
 end
 
 """
-QQQQ
+Negate a term.
 """
--(t::Term) = Term(-t.coeff,t.degree)  #QQQQ - check with Andy why can't have ::Term as return value
+#QQQQ - check with Paul/Andy why can't have ::Term as return value
+-(t::Term) = Term(-t.coeff,t.degree)  
 
 """
-QQQQ
+Subtract two terms with the same degree.
 """
--(t1::Term,t2::Term)::Term = t1 + (-t2) 
+-(t1::Term, t2::Term)::Term = t1 + (-t2) 
 
 """
-QQQQ
+Multiply two terms.
 """
-*(t1::Term,t2::Term)::Term = Term(t1.coeff * t2.coeff, t1.degree + t2.degree)
+*(t1::Term, t2::Term)::Term = Term(t1.coeff * t2.coeff, t1.degree + t2.degree)
 
 """
-QQQQ
+Integer divide a term by an integer.
 """
-÷(t::Term,n::Int)::Term = Term(t.coeff ÷n, t.degree)
+÷(t::Term, n::Int)::Term = Term(t.coeff ÷n, t.degree)
 
 """
-QQQQ
+Compute the symmetric mod of a term with an integer.
 """
-smod(t::Term,p::Int)::Term = Term(smod(t.coeff,p), t.degree)
+smod(t::Term, p::Int)::Term = Term(smod(t.coeff,p), t.degree)
 
 """
-QQQQ
+Compute the derivative of a term.
 """
 derivative(t::Term) = Term(t.coeff*t.degree,max(t.degree-1,0))
 
 """
-QQQQ
+Divide two terms.
 """
-function ÷(t1::Term,t2::Term)#::QQQQ what is return value???
+#::QQQQ what is return value???
+#QQQQ - is this used?
+function ÷(t1::Term,t2::Term)
     @assert t1.degree ≥ t2.degree
     f(p::Int)::Term = Term(smod((t1.coeff * int_inverse_smod(t2.coeff, p)), p), t1.degree - t2.degree)
 end
-
-#QQQQ - maybe there is a better "julian" name for it.
-"""
-QQQQ
-"""
-evaluate(t::Term, x::T) where T <: Number = t.coeff * x^t.degree

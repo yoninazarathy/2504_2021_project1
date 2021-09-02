@@ -1,5 +1,14 @@
+#############################################################################
+#############################################################################
+#
+# This file contains units tests for polynomial operations
+#                                                                               
+#############################################################################
+#############################################################################
+
+
 """
-Tests QQQQ.
+Test product of polynomials.
 """
 function prod_test_poly(;N::Int = 10^3, N_prods::Int = 20, seed::Int = 0)
     # QQQQ - handle tests without dividing by zero.
@@ -24,9 +33,9 @@ function prod_test_poly(;N::Int = 10^3, N_prods::Int = 20, seed::Int = 0)
 end
 
 """
-Tests QQQQ.
+Test derivative of polynomials (as well as product).
 """
-function prod_derivative_test_poly(;N::Int = 10^4,  seed::Int = 0)
+function prod_derivative_test_poly(;N::Int = 10^2,  seed::Int = 0)
     Random.seed!(seed)
     for _ in 1:N
         p1 = rand(Polynomial)
@@ -40,7 +49,7 @@ end
 
 
 """
-Tests QQQQ.
+Test division of polynomials modulo p.
 """
 function division_test_poly(;prime::Int = 101, N::Int = 10^4, seed::Int = 0)
     # QQQQ - handle tests without dividing by zero.
@@ -69,15 +78,13 @@ function division_test_poly(;prime::Int = 101, N::Int = 10^4, seed::Int = 0)
 end
 
 """
-Tests QQQQ.
+Test the extended euclid algorithm for polynomials modulo p.
 """
-function ext_euclid_test_poly(;prime::Int=101, N::Int = 2, seed::Int = 0)
+function ext_euclid_test_poly(;prime::Int=101, N::Int = 10^3, seed::Int = 0)
     Random.seed!(seed)
     for _ in 1:N
         p1 = rand(Polynomial)
         p2 = rand(Polynomial)
-        @show p1
-        @show p2
         g, s, t = extended_euclid_alg(p1, p2, prime)
         @assert smod(s*p1 + t*p2 - g, prime) == 0
     end

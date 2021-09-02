@@ -1,25 +1,19 @@
 #############################################################################
 #############################################################################
 #
-# A script that runs all unit tests in the project.
+# This file implements polynomial multiplication 
 #                                                                               
 #############################################################################
 #############################################################################
 
-include("poly_factorization_project.jl")
-
-####
-# Execute unit tests for integers
-###
-include("test/integers_test.jl")
-test_euclid_ints()
-test_ext_euclid_ints()
-
-####
-# Execute unit tests for polynomials
-####
-include("test/polynomials_test.jl")
-prod_test_poly()
-prod_derivative_test_poly()
-ext_euclid_test_poly()
-division_test_poly()
+"""
+Multiply two polynomials.
+"""
+#STD: Improve this naive (inefficient multiplication)
+function *(p1::Polynomial, p2::Polynomial)::Polynomial
+    p_out = Polynomial()
+    for tt in extract_all!(deepcopy(p1.terms)) #tt is target term
+        p_out = p_out + (tt * p2)
+    end
+    return p_out
+end

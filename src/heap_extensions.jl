@@ -1,10 +1,18 @@
+#############################################################################
+#############################################################################
+#
+# This file contains several extensions for the `MutableBinaryMaxHeap` type 
+#                                                                               
+#############################################################################
+#############################################################################
+
 """
-QQQQ
+Check that two heaps have the same values.
 """
 ==(h1::MutableBinaryMaxHeap, h2::MutableBinaryMaxHeap)::Bool = extract_all!(deepcopy(h1)) == extract_all!(deepcopy(h2))
 
 """
-QQQQ
+Apply a mapping to the heap values.
 """
 function map!(f, h::MutableBinaryMaxHeap)
     for n in h.nodes
@@ -14,17 +22,17 @@ function map!(f, h::MutableBinaryMaxHeap)
 end
 
 """
-QQQQ
+Apply a mapping to the heap values and create a new heap.
 """
 map(f,h::MutableBinaryMaxHeap) = map!(f,deepcopy(h))
 
 """
-QQQQ
+Iterate over the heap. Implements the iteratable inteface.
 """
 iterate(h::MutableBinaryMaxHeap, state=1) = state > length(h) ? nothing : (h.nodes[state].value, state+1)
 
 """
-Very ineffcient for heap! Getting the minimal term from a Max Heap.
+Gets the minimal term from a Max Heap (Very inefficiently for heap!)
 """
 #QQQQ  - probability delete this function
 last(h::MutableBinaryMaxHeap) = last(extract_all!(deepcopy(h)))

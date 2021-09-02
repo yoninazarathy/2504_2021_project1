@@ -23,10 +23,14 @@ include("../poly_factorization_project.jl")
 
 # x2 + 7x + 6 and x2 − 5x − 6:
 
-# p1 = Polynomial([Term(1,2),Term(7,1),Term(6,0)])
-# p2 = Polynomial([Term(1,2),Term(-5,1),Term(-6,0)])
+p1 = Polynomial([Term(1,2),Term(7,1),Term(6,0)])
+p2 = Polynomial([Term(1,2),Term(-5,1),Term(-6,0)])
+
+
+
 
 # p = x8 + x4 + x3 + x + 1, and a = x6 + x4 + x + 1 
+
 
 extended_euclid_alg(p1,p2,101)
 

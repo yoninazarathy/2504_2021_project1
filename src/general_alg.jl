@@ -1,14 +1,22 @@
+#############################################################################
+#############################################################################
+#
+# This file implement several basic algorithms for integers. 
+#                                                                               
+#############################################################################
+#############################################################################
+
 """
-QQQQ
+The quotient between two numbers
 """
-function quo(a::T,b::T) where T <: Int
+function quo(a::T,b::T) where T <: Integer
     a < 0 && return -quo(-a,b)
     a < b && return 0
     return 1 + quo(a-b, b)
 end
 
 """
-QQQQ
+Euclid's algorithm.
 """
 function euclid_alg(a, b; rem_function = %)
     b == 0 && return a
@@ -16,14 +24,18 @@ function euclid_alg(a, b; rem_function = %)
 end
 
 """
-QQQQ
+Euclid's algorithm on multiple arguments.
 """
 euclid_alg(a...) = foldl((a,b)->euclid_alg(a,b), a; init = 0)
-euclid_alg(a::Vector{T}) where T <: Int = euclid_alg(a...)
+
+"""
+Euclid's algorithm on a vector.
+"""
+euclid_alg(a::Vector{T}) where T <: Integer = euclid_alg(a...)
 
 
 """
-QQQQ
+The extended Euclidean algorithm.
 """
 function ext_euclid_alg(a, b, rem_function = %, div_function = ÷)
     a == 0 && return b, 0, 1
@@ -34,6 +46,27 @@ function ext_euclid_alg(a, b, rem_function = %, div_function = ÷)
 end
 
 """
-QQQQ
+Display the result of the extended Euclidean algorithm.
 """
 pretty_print_egcd((a,b),(g,s,t)) = println("$a × $s + $b × $t = $g") #\times + [TAB]
+
+"""
+Symmetric mod for integers.
+"""
+function smod(a::Int, m::Int)::Int 
+    return mod(a,m)
+    #QQQQ - would like to have smod and not mod... somehow doesn't work - fix later...
+    # crude_mod = mod(a,m)
+    # crude_mod > m ÷ 2 ? crude_mod - m : crude_mod
+end
+
+
+"""
+Integer inverse symmetric mod
+"""
+function int_inverse_smod(a::Int, m::Int)::Int 
+    if smod(a, m) == 0
+        error("Can't find inverse of $a mod $m because $m divides $a") #QQQQ update to throw
+    end
+    return smod(ext_euclid_alg(a,m)[2],m)
+end
