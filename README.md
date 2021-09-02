@@ -6,13 +6,13 @@ This project implements polynomial arithmetic and polynomial factorization for p
 
 Students are supposed to fork the project and create their modifications and improvements according [Project1 description](https://courses.smp.uq.edu.au/MATH2504/assessment_html/project1.html).
 
-To load all functionallity run:
+To load all functionality run:
 
 ```
 julia> include("poly_factorization_project.jl")
 ```
 
-You may then use functionallity such as,
+You may then use functionality such as,
 
 ```
 julia> gcd(rand(Polynomial) + rand(Polynomial), rand(Polynomial), 101)
