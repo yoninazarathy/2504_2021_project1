@@ -21,7 +21,7 @@ julia> gcd(rand(Polynomial) + rand(Polynomial), rand(Polynomial), 101)
 To execute all unit tests run:
 
 ```
-julia> include("run_tests.jl")
+julia> include("test/runtests.jl")
 ```
 
 You may see examples in `example_script.jl` and run that script line by line.

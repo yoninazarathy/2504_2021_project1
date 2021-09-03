@@ -18,7 +18,7 @@ f = q*g + r
 
 p is a prime
 """
-function divide(num::Polynomial, den::Polynomial)# QQQQ what is the return type
+function divide(num::Polynomial, den::Polynomial)
     function division_function(p::Int)
         f, g = smod(num,p), smod(den,p)
         degree(f) < degree(num) && return nothing #QQQQ ask Paul/Andy...

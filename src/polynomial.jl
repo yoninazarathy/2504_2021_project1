@@ -59,6 +59,15 @@ Construct a polynomial of the form x-n.
 #STD-(polynomial.jl#2): Make this a specific form of a constructor
 linear_monic_polynomial(n::Int) = Polynomial([Term(1,1), Term(-n,0)])
 
+"""
+Construct a polynomial of the form x.
+"""
+#STD-(polynomial.jl#3): Make this a specific form of a constructor
+x_poly() = Polynomial(Term(1,1))
+
+
+#QQQQ 
+#arbitrary_monic
 
 """
 Creates the zero polynomial.
@@ -69,6 +78,7 @@ zero(::Type{Polynomial})::Polynomial = Polynomial()
 Creates the unit polynomial.
 """
 one(::Type{Polynomial})::Polynomial = Polynomial(one(Term))
+one(p::Polynomial) = one(typeof(p))
 
 """
 Generates a random polynomial.
@@ -251,7 +261,7 @@ Multiplication of polynomial and term.
 """
 Multiplication of polynomial and an integer.
 """
-*(n::Int,p::Polynomial)::Polynomial = p*Term(n,1)
+*(n::Int,p::Polynomial)::Polynomial = p*Term(n,0)
 *(p::Polynomial,n::Int)::Polynomial = n*p
 
 """

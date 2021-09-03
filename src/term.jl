@@ -76,8 +76,7 @@ end
 """
 Negate a term.
 """
-#QQQQ - check with Paul/Andy why can't have ::Term as return value
--(t::Term) = Term(-t.coeff,t.degree)  
+-(t::Term,) = Term(-t.coeff,t.degree)  
 
 """
 Subtract two terms with the same degree.

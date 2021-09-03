@@ -31,3 +31,15 @@ function +(p1::Polynomial, p2::Polynomial)::Polynomial
     end
     return p3
 end
+
+"""
+Add a polynomial and a term.
+"""
++(p::Polynomial, t::Term) = p + Polynomial(t)
++(t::Term, p::Polynomial) = p + t
+
+"""
+Add a polynomial and an integer.
+"""
++(p::Polynomial, n::Int) = p + Term(n,0)
++(n::Int, p::Polynomial) = p + Term(n,0)
