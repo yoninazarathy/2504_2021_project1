@@ -85,5 +85,6 @@ Returns a list of irreducible polynomials of degree `d` so that the product of t
 #     n_power = (prime^d-1) ÷ 2
 #     g = gcd(w^n_power - one(Polynomial), f, prime)
 #     ḡ = (f ÷ g)(p) # g\bar + [TAB]
+#     dd_split(g, d, prime)
 #     return list_concat(thisproc(g, d, p), thisproc(gbar, d, p));
 # end

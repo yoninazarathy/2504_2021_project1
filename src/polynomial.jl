@@ -95,7 +95,7 @@ function rand(::Type{Polynomial} ;
     while true 
         _degree = degree == -1 ? rand(Poisson(mean_degree)) : degree
         _terms = terms == -1 ? rand(Binomial(_degree,prob_term)) : terms
-        degrees = union(sort(sample(0:_degree-1,_terms,replace = false)),_degree)
+        degrees = vcat(sort(sample(0:_degree-1,_terms,replace = false)),_degree)
         coeffs = rand(1:max_coeff,_terms+1)
         monic && (coeffs[end] = 1)
         p = Polynomial( [Term(coeffs[i],degrees[i]) for i in 1:length(degrees)] )
