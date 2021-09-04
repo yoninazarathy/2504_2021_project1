@@ -67,12 +67,12 @@ function division_test_poly(;prime::Int = 101, N::Int = 10^4, seed::Int = 0)
             end
         catch e
             if typeof(e) == DivideError
-                @assert smod(p2, prime) == 0
+                @assert mod(p2, prime) == 0
             else
                 throw(e)
             end
         end
-        @assert iszero( smod(q*p2+r - p_prod,prime) )
+        @assert iszero( mod(q*p2+r - p_prod,prime) )
     end
     println("division_test_poly - PASSED")
 end
@@ -86,7 +86,7 @@ function ext_euclid_test_poly(;prime::Int=101, N::Int = 10^3, seed::Int = 0)
         p1 = rand(Polynomial)
         p2 = rand(Polynomial)
         g, s, t = extended_euclid_alg(p1, p2, prime)
-        @assert smod(s*p1 + t*p2 - g, prime) == 0
+        @assert mod(s*p1 + t*p2 - g, prime) == 0
     end
     println("ext_euclid_test_poly - PASSED")
 end

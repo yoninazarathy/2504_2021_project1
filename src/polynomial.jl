@@ -282,10 +282,10 @@ Warning this may not make sense if n does not divide all the coefficients of p.
 Take the smod of a polynomial with an integer.
 """
 #QQQQ - Yoni - use map as needed and also maintain not having Term(0,0) as invairant
-function smod(f::Polynomial, p::Int)::Polynomial
+function mod(f::Polynomial, p::Int)::Polynomial
     p_out = Polynomial()
     for tt in extract_all!(deepcopy(f.terms))
-        push!(p_out, smod(tt, p)) #if coeff reduced to zero, push! will handle it
+        push!(p_out, mod(tt, p)) #if coeff reduced to zero, push! will handle it
     end
     return p_out
 end

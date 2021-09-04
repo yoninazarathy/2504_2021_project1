@@ -10,7 +10,7 @@ using DataStructures, Distributions, StatsBase, Random
 
 import Base: %
 import Base: push!, pop!, iszero, show, isless, map, map!, iterate, length, last
-import Base: +, -, *, mod, ÷, ==, ^, rand, rem, zero, one #QQQQ - maybe don't need mod here
+import Base: +, -, *, mod, %, ÷, ==, ^, rand, rem, zero, one
 
 include("src/heap_extensions.jl")
 include("src/general_alg.jl")

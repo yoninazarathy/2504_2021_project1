@@ -51,22 +51,11 @@ Display the result of the extended Euclidean algorithm.
 pretty_print_egcd((a,b),(g,s,t)) = println("$a × $s + $b × $t = $g") #\times + [TAB]
 
 """
-Symmetric mod for integers.
-"""
-function smod(a::Int, m::Int)::Int 
-    return mod(a,m)
-    #QQQQ - would like to have smod and not mod... somehow doesn't work - fix later...
-    # crude_mod = mod(a,m)
-    # crude_mod > m ÷ 2 ? crude_mod - m : crude_mod
-end
-
-
-"""
 Integer inverse symmetric mod
 """
-function int_inverse_smod(a::Int, m::Int)::Int 
-    if smod(a, m) == 0
-        error("Can't find inverse of $a mod $m because $m divides $a") #QQQQ update to throw
+function int_inverse_mod(a::Int, m::Int)::Int 
+    if mod(a, m) == 0
+        error("Can't find inverse of $a mod $m because $m divides $a") 
     end
-    return smod(ext_euclid_alg(a,m)[2],m)
+    return mod(ext_euclid_alg(a,m)[2],m)
 end
