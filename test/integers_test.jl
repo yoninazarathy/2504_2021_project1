@@ -42,9 +42,9 @@ Tests the computation of inverse mod for integers.
 function test_inverse_mod_ints(;prime::Int=101,N::Int=10^4)
     Random.seed!(0)
     for _ in 1:N
-        n = rand(1:10^6)#QQQQ 
+        n = rand(1:10^6)
         if mod(n, prime) == 0
-            continue #QQQQ - handle to actually catch the error thrown and continue testing...
+            continue
         end
         im = int_inverse_mod(n,prime) 
         @assert mod((n*im), prime) == 1

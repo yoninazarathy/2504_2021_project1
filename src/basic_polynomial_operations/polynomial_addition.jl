@@ -9,7 +9,6 @@
 """
 Add two polynomials.
 """
-#QQQQ - Maybe have the "distributive addition" paradigm like multiplication (less efficient)
 function +(p1::Polynomial, p2::Polynomial)::Polynomial
     p1, p2 = deepcopy(p1), deepcopy(p2)
     p3 = Polynomial()

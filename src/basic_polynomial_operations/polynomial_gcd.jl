@@ -11,17 +11,11 @@ The extended euclid algorithm for polynomials modulo prime.
 """
 function extended_euclid_alg(a::Polynomial, b::Polynomial, prime::Int)
     old_r, r = mod(a,prime), mod(b,prime)
-    # @show old_r, r
     old_s, s = one(Polynomial), zero(Polynomial)
     old_t, t = zero(Polynomial), one(Polynomial)
 
-    # cnt = 0
-
-    while !iszero(mod(r,prime)) #&& cnt < 20
-        # cnt += 1
-        # @show cnt
-        q = divide(old_r, r)(prime) |> first #QQQQ cleanup
-        # @show q
+    while !iszero(mod(r,prime))
+        q = divide(old_r, r)(prime) |> first
         old_r, r = r, mod(old_r - q*r, prime)
         old_s, s = s, mod(old_s - q*s, prime)
         old_t, t = t, mod(old_t - q*t, prime)

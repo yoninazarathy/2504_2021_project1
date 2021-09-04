@@ -11,7 +11,6 @@
 Test product of polynomials.
 """
 function prod_test_poly(;N::Int = 10^3, N_prods::Int = 20, seed::Int = 0)
-    # QQQQ - handle tests without dividing by zero.
     Random.seed!(seed)
     for _ in 1:N
         p1 = rand(Polynomial)
@@ -52,13 +51,12 @@ end
 Test division of polynomials modulo p.
 """
 function division_test_poly(;prime::Int = 101, N::Int = 10^4, seed::Int = 0)
-    # QQQQ - handle tests without dividing by zero.
     Random.seed!(seed)
     for _ in 1:N
         p1 = rand(Polynomial)
         p2 = rand(Polynomial)
         p_prod = p1*p2
-        q, r = Polynomial(), Polynomial() #QQQQ how to expose from try to outside of it...
+        q, r = Polynomial(), Polynomial()
         try
             q, r = divide(p_prod, p2)(prime)
             if (q, r) == (nothing,nothing)

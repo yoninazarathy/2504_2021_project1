@@ -193,17 +193,6 @@ iszero(p::Polynomial)::Bool = isempty(p.terms)
 The negative of a polynomial.
 """
 -(p::Polynomial) = Polynomial(map((pt)->-pt, p.terms))
-#     p_temp = deepcopy(p)
-#     p_out = Polynomial()
-#     while !iszero(p_temp)
-#         push!(p_out,-pop!(p_temp))
-#     end
-#     return p_out
-# end
-
-#QQQQ Can't specify return Polynomial?
-# -(p::Polynomial) = Polynomial(map((pt)->-pt, p.terms)) 
-
 
 """
 Create a new polynomial which is the derivative of the polynomial.
@@ -224,7 +213,7 @@ prim_part(p::Polynomial)::Polynomial = p ÷ content(p)
 
 
 """
-QQQQ
+A square free polynomial.
 """
 square_free(p::Polynomial, prime::Int)::Polynomial = (p ÷ gcd(p,derivative(p),prime))(prime)
 

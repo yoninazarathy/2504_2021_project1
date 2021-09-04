@@ -104,10 +104,8 @@ Compute the derivative of a term.
 derivative(t::Term) = Term(t.coeff*t.degree,max(t.degree-1,0))
 
 """
-Divide two terms.
+Divide two terms. Returns a function of an integer.
 """
-#::QQQQ what is return value???
-#QQQQ - is this used?
 function ÷(t1::Term,t2::Term)
     @assert t1.degree ≥ t2.degree
     f(p::Int)::Term = Term(mod((t1.coeff * int_inverse_mod(t2.coeff, p)), p), t1.degree - t2.degree)
