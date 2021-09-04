@@ -39,3 +39,46 @@
 #     if STOPPING CONDITION  -  
 # end
 
+
+"""
+Factors a polynomial over the field Z_p.
+
+Returns a list of irreducible polynomials (mod p) such that their product of the list (mod p) is f. Irreducibles are fixed points on the function factor.
+"""
+function factor(f::Polynomial, prime::Int) 
+
+end
+
+"""
+Distinct degree factorization.
+
+Given a square free polynomial `f` returns a list, `g` such that `g[k]` is a product of irreducible polynomials of degree `k` for `k` in 1,...,degree(f) ÷ 2, such that the product of the list (mod `prime`) is equal to `f` (mod `prime`).
+"""
+function dd_factor(f::Polynomial, prime::Int)::Array{Polynomial}
+    x = x_poly()
+    w = deepcopy(x)
+    max_d = degree(f) ÷ 2
+    g = Array{Polynomial}(undef,max_d) #Array of polynomials indexed by degree
+
+    #Looping over degrees
+    for k in 1:max_d
+        w = rem(w^prime,f)(prime)
+        g[k] = gcd(w - x, f, prime) 
+        f = (f ÷ g[k])(prime) 
+    end
+
+    #edge case for final factor
+    f != one(Polynomial) && push!(g,f)
+    
+    return g
+end
+
+"""
+Distinct degree split.
+
+Returns a list of irreducible polynomials of degree `d` so that the product of that list (mod prime) is the polynomial `f`.
+"""
+function dd_split(f::Polynomial, d::Int, prime::Int)
+    #QQQQ
+    return nothing #QQQQ
+end
