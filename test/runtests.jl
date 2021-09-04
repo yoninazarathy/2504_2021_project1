@@ -6,19 +6,19 @@
 #############################################################################
 #############################################################################
 
-include("poly_factorization_project.jl")
+include("../poly_factorization_project.jl")
 
 ####
 # Execute unit tests for integers
 ###
-include("test/integers_test.jl")
+include("integers_test.jl")
 test_euclid_ints()
 test_ext_euclid_ints()
 
 ####
 # Execute unit tests for polynomials
 ####
-include("test/polynomials_test.jl")
+include("polynomials_test.jl")
 prod_test_poly()
 prod_derivative_test_poly()
 ext_euclid_test_poly()
