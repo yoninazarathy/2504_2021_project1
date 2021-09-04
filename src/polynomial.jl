@@ -116,8 +116,9 @@ function Base.show(io::IO, p::Polynomial)
     if iszero(p)
         print(io,"0")
     else
-        for t in extract_all!(p.terms)
-            print(io, t, "+ ")
+        n = length(p.terms)
+        for (i,t) in enumerate(extract_all!(p.terms))
+            print(io, t, i != n ? "+ " : "")
         end
     end
 end
