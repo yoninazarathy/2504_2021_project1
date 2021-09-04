@@ -78,7 +78,12 @@ Distinct degree split.
 
 Returns a list of irreducible polynomials of degree `d` so that the product of that list (mod prime) is the polynomial `f`.
 """
-function dd_split(f::Polynomial, d::Int, prime::Int)
-    #QQQQ
-    return nothing #QQQQ
-end
+# function dd_split(f::Polynomial, d::Int, prime::Int)::Vector{Polynomial}
+#     degree(f) == d && return [f]
+#     degree(f) == 0 && return []
+#     w = rand(Polynomial, degree = d, monic = true, condition = (p)->is_irreducible(p,prime) )
+#     n_power = (prime^d-1) ÷ 2
+#     g = gcd(w^n_power - one(Polynomial), f, prime)
+#     ḡ = (f ÷ g)(p) # g\bar + [TAB]
+#     return list_concat(thisproc(g, d, p), thisproc(gbar, d, p));
+# end

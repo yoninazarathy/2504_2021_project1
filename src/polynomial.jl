@@ -89,14 +89,18 @@ function rand(::Type{Polynomial} ;
                 max_coeff::Int = 100, 
                 mean_degree::Float64 = 5.0,
                 prob_term::Float64  = 0.7,
-                monic = false)
-
-    degree == -1 && (degree = rand(Poisson(mean_degree)))
-    terms == -1 && (terms = rand(Binomial(degree,prob_term)))
-    degrees = union(sort(sample(0:degree-1,terms,replace = false)),degree)
-    coeffs = rand(1:max_coeff,terms+1)
-    monic && (coeffs[end] = 1)
-    return Polynomial( [Term(coeffs[i],degrees[i]) for i in 1:length(degrees)] )
+                monic = false,
+                condition = (p)->true)
+        
+    while true 
+        _degree = degree == -1 ? rand(Poisson(mean_degree)) : degree
+        _terms = terms == -1 ? rand(Binomial(_degree,prob_term)) : terms
+        degrees = union(sort(sample(0:_degree-1,_terms,replace = false)),_degree)
+        coeffs = rand(1:max_coeff,_terms+1)
+        monic && (coeffs[end] = 1)
+        p = Polynomial( [Term(coeffs[i],degrees[i]) for i in 1:length(degrees)] )
+        condition(p) && return p
+    end
 end
 
 ###########
