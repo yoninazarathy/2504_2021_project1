@@ -65,10 +65,6 @@ Construct a polynomial of the form x.
 #STD-(polynomial.jl#3): Make this a specific form of a constructor
 x_poly() = Polynomial(Term(1,1))
 
-
-#QQQQ 
-#arbitrary_monic
-
 """
 Creates the zero polynomial.
 """
@@ -162,10 +158,9 @@ The content of the polynomial is the GCD of its coefficients.
 content(p::Polynomial)::Int = euclid_alg(coeffs(p))
 
 """
-QQQQ
+Evaluate the polynomial at a point `x`.
 """
-#QQQQ - use a "map" after making it.
-evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(tt,x) for tt in extract_all!(deepcopy(f.terms)))
+evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(t,x) for t in f)
 
 ################################
 # Pushing and popping of terms #
@@ -281,11 +276,10 @@ Warning this may not make sense if n does not divide all the coefficients of p.
 """
 Take the smod of a polynomial with an integer.
 """
-#QQQQ - Yoni - use map as needed and also maintain not having Term(0,0) as invairant
 function mod(f::Polynomial, p::Int)::Polynomial
     p_out = Polynomial()
-    for tt in extract_all!(deepcopy(f.terms))
-        push!(p_out, mod(tt, p)) #if coeff reduced to zero, push! will handle it
+    for t in f
+        push!(p_out, mod(t, p)) #if coeff reduced to zero, push! will handle it
     end
     return p_out
 end
