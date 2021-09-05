@@ -12,23 +12,7 @@ Factors a polynomial over the field Z_p.
 Returns a list of irreducible polynomials (mod p) such that their product of the list (mod p) is f. Irreducibles are fixed points on the function factor.
 """
 function factor(f::Polynomial, prime::Int) 
-    #cantor_zassenhaus_factorization
-    f = mod(f,prime)
-    old_content = content(f)
-    f = mod(f ÷ old_content,prime)      # make f primitive;
-    old_coeff = leading(f).coeff
-    f = mod(f ÷ old_coeff,prime)        # make f monic
-    squares = gcd(f, derivative(f), prime) 
-    sqrfree_f = (f ÷ squares)(prime)    # make f square-free
-    dds = dd_factor(sqrfree_f, prime)
-    # look = map(x -> Factor(x) mod p, dds); 
-#     irreduc_factors := foldr(list_concat, seq(dd_split(dds[k], k, p), k=1..nops(dds)));
-#     # construct the answer
-#     ans := [old_content*old_coeff, 1];  # the old leading coefficient
-#     for k from 1 to nops(irreduc_factors) do:   # nops is length
-#         ans := ans, [irreduc_factors[k], repeated_remainder(f, irreduc_factors[k], p)];
-#     end do;
-#     return [ans];
+    #functionality missing here.
 end
 
 """
