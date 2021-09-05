@@ -57,11 +57,10 @@ Given a square free polynomial `f` returns a list, `g` such that `g[k]` is a pro
 function dd_factor(f::Polynomial, prime::Int)::Array{Polynomial}
     x = x_poly()
     w = deepcopy(x)
-    max_d = degree(f) ÷ 2
-    g = Array{Polynomial}(undef,max_d) #Array of polynomials indexed by degree
+    g = Array{Polynomial}(undef,degree(f)) #Array of polynomials indexed by degree
 
     #Looping over degrees
-    for k in 1:max_d
+    for k in 1:degree(f)
         w = rem(w^prime,f)(prime)
         g[k] = gcd(w - x, f, prime) 
         f = (f ÷ g[k])(prime) 
