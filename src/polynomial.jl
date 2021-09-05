@@ -22,7 +22,6 @@ struct Polynomial
     Polynomial() = new(MutableBinaryMaxHeap{Term}())
 
     #Inner constructor
-    #STD: Check that the input heap does not have terms with the same coefficient or a 0 coefficient
     Polynomial(h::MutableBinaryMaxHeap{Term}) = new(h)
 end
 
@@ -49,20 +48,17 @@ end
 """
 Construct a polynomial of the form x^p-x.
 """
-#STD-(polynomial.jl#1): Make this a specific form of a constructor
 cyclotonic_polynomial(p::Int) = Polynomial([Term(1,p), Term(-1,0)])
 
 
 """
 Construct a polynomial of the form x-n.
 """
-#STD-(polynomial.jl#2): Make this a specific form of a constructor
 linear_monic_polynomial(n::Int) = Polynomial([Term(1,1), Term(-n,0)])
 
 """
 Construct a polynomial of the form x.
 """
-#STD-(polynomial.jl#3): Make this a specific form of a constructor
 x_poly() = Polynomial(Term(1,1))
 
 """
@@ -106,7 +102,6 @@ end
 """
 Show a polynomial.
 """
-#STD-(polynomial.jl#3): Improve pretty printing.
 function Base.show(io::IO, p::Polynomial) 
     p = deepcopy(p)
     if iszero(p)
@@ -169,7 +164,7 @@ evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(t,x) for t in f)
 """
 Push a new term into the polynomial.
 """
-#STD-(polynomial.jl#4): Handle error if pushing another term of same degree
+#Note that ideally this would throw and error if pushing another term of degree that is already in the polynomial
 function push!(p::Polynomial, t::Term) 
     iszero(t) && return #don't push a zero
     push!(p.terms,t)
@@ -230,7 +225,7 @@ Check if two polynomials are the same
 """
 Check if a polynomial is equal to 0.
 """
-#STD: There is a problem here. E.g The polynomial 3 will return true to equalling the integer 2.
+#Note that in principle there is a problem here. E.g The polynomial 3 will return true to equalling the integer 2.
 ==(p::Polynomial, n::T) where T <: Real = iszero(p) == iszero(n)
 
 ##################################################################

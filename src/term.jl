@@ -39,7 +39,6 @@ one(::Type{Term})::Term = Term(1,0)
 """
 Show a term.
 """
-#STD: Improve show to be as good as possible
 Base.show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")
 
 ########################

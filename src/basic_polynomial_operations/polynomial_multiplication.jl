@@ -9,7 +9,6 @@
 """
 Multiply two polynomials.
 """
-#STD: Improve this naive (inefficient multiplication)
 function *(p1::Polynomial, p2::Polynomial)::Polynomial
     p_out = Polynomial()
     for t in p1
