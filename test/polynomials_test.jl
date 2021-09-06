@@ -70,7 +70,7 @@ function division_test_poly(;prime::Int = 101, N::Int = 10^4, seed::Int = 0)
                 throw(e)
             end
         end
-        @assert iszero( mod(q*p2+r - p_prod,prime) )
+        @assert iszero( mod(q*p2+r - p_prod, prime) )
     end
     println("division_test_poly - PASSED")
 end

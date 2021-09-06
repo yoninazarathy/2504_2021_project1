@@ -18,7 +18,7 @@ struct Polynomial
         #The terms in the heap need to satisfy:
             # Will never have terms with 0 coefficient
             # Will never have two terms with same coefficient
-        #An empty terms heap means that the polynomial
+        #An empty terms heap means that the polynomial is zero
     Polynomial() = new(MutableBinaryMaxHeap{Term}())
 
     #Inner constructor
@@ -30,7 +30,7 @@ Construct a polynomial with a single term.
 """
 function Polynomial(t::Term)
     terms = MutableBinaryMaxHeap{Term}()
-    t.coeff != 0 && push!(terms,t)
+    t.coeff != 0 && push!(terms, t)
     return Polynomial(terms)
 end
 
@@ -102,7 +102,7 @@ end
 """
 Show a polynomial.
 """
-function Base.show(io::IO, p::Polynomial) 
+function show(io::IO, p::Polynomial) 
     p = deepcopy(p)
     if iszero(p)
         print(io,"0")

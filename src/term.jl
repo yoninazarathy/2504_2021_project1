@@ -39,7 +39,7 @@ one(::Type{Term})::Term = Term(1,0)
 """
 Show a term.
 """
-Base.show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")
+show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)") #\cdot + [TAB]
 
 ########################
 # Queries about a term #
@@ -48,7 +48,7 @@ Base.show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")
 """
 Check if a term is 0.
 """
-Base.iszero(t::Term)::Bool = iszero(t.coeff)
+iszero(t::Term)::Bool = iszero(t.coeff)
 
 """
 Compare two terms.
@@ -105,7 +105,7 @@ derivative(t::Term) = Term(t.coeff*t.degree,max(t.degree-1,0))
 """
 Divide two terms. Returns a function of an integer.
 """
-function ÷(t1::Term,t2::Term)
+function ÷(t1::Term,t2::Term) #\div + [TAB]
     @assert t1.degree ≥ t2.degree
     f(p::Int)::Term = Term(mod((t1.coeff * int_inverse_mod(t2.coeff, p)), p), t1.degree - t2.degree)
 end
