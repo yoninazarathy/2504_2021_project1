@@ -202,9 +202,9 @@ function derivative(p::Polynomial)::Polynomial
 end
 
 """
-The prim part (multiply a polynomial by the inverse of its content)
+The prim part (multiply a polynomial by the inverse of its content).
 """
-prim_part(p::Polynomial)::Polynomial = p ÷ content(p)
+prim_part(p::Polynomial) = p ÷ content(p)
 
 
 """
@@ -255,7 +255,7 @@ Integer division of a polynomial by an integer.
 
 Warning this may not make sense if n does not divide all the coefficients of p.
 """
-÷(p::Polynomial,n::Int)::Polynomial = Polynomial(map((pt)->pt ÷ n, p.terms))
+÷(p::Polynomial,n::Int) = (prime)->Polynomial(map((pt)->((pt ÷ n)(prime)), p.terms))
 
 """
 Take the smod of a polynomial with an integer.
@@ -266,4 +266,17 @@ function mod(f::Polynomial, p::Int)::Polynomial
         push!(p_out, mod(t, p)) #if coeff reduced to zero, push! will handle it
     end
     return p_out
+end
+
+"""
+Power of a polynomial mod prime.
+"""
+function pow_mod(p::Polynomial, n::Int, prime::Int)
+    n < 0 && error("No negative power")
+    out = one(p)
+    for _ in 1:n
+        out *= p
+        out = mod(out, prime)
+    end
+    return out
 end
