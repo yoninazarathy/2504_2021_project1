@@ -18,3 +18,10 @@ println("Here is the factorization: ", factorization)
 
 pr = mod(expand_factorization(factorization),prime)
 println("Reconstructing: ", pr)
+
+x = x_poly()
+p1 = 2x^2+3x +(-5) #Note we need +(-5)... try later without... how to fix?
+p2 = -3x^2 - 4x +6
+p1+p2
+
+extended_euclid_alg(p1*p2,p2,101)
