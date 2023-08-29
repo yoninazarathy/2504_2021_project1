@@ -1,8 +1,5 @@
 # 2504_2021_project1 - Polynomial Factorization
-
-*NOTE: This repo is for 2021, not for the current course*
-
-This is for [UQ's MATH2504 in Semester 2 2021](https://courses.smp.uq.edu.au/MATH2504/).
+# WARNING THIS IS FROM A PREVIOUS YEAR
 
 This project implements polynomial arithmetic and polynomial factorization for polynomials with integer coefficients. 
 
